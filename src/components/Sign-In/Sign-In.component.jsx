@@ -3,7 +3,7 @@ import React from 'react';
 import './Sign-In.styles.scss'
 import FormInput from '../form-input/form-input.component';
 import CustomButton from '../custom-button/custom-button.component';
-import { SignInWithGoogle } from '../../firebase/firebase.utils';
+import { auth, SignInWithGoogle } from '../../firebase/firebase.utils';
 
 class SignIn extends React.Component {
     constructor(props) {
@@ -13,9 +13,15 @@ class SignIn extends React.Component {
             password: ''
         }
     }
-    handelSubmit = (e) => {
+    handelSubmit = async e => {
         e.preventDefault();
-        this.setState({ email: '', password: '' });
+        const { email, password } = this.state;
+        try {
+            await auth.signInWithEmailAndPassword(email, password);
+            this.setState({ email: '', password: '' });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     handelChange = (e) => {
@@ -28,10 +34,18 @@ class SignIn extends React.Component {
             <span>Sign in with your Email and Password</span>
 
             <form onSubmit={this.handelSubmit}>
-                <FormInput type="email" name="email" label='email' handelChange={this.handelChange} value={this.state.email} required />
-
-                <FormInput type="password" name="password" label="passowrd" handelChange={this.handelChange} value={this.state.password} required />
-
+                <FormInput
+                    type="email"
+                    name="email"
+                    label='email'
+                    handelChange={this.handelChange}
+                    value={this.state.email} required />
+                <FormInput
+                    type="password"
+                    name="password"
+                    label="passowrd"
+                    handelChange={this.handelChange}
+                    value={this.state.password} required />
                 <div className='bottons'>
                     <CustomButton type="submit" value="Submit Form" > Sign In</CustomButton>
                     <CustomButton onClick={SignInWithGoogle} isGoogleSignIn>Sign In With Google</CustomButton>
