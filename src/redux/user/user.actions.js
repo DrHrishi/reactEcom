@@ -1,4 +1,5 @@
+import { userActionTypes } from './user.types'
 export const setCurrentUser = user => ({
-    type: 'SET-CURRENT-USER',
+    type: userActionTypes.setCurrentUser,
     payload: user
 })
